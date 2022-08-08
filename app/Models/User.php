@@ -8,10 +8,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, HasRoles, Notifiable;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
+
+    const SUPER_ADMIN_ROLE = 'super-admin';
+    const ADMIN_ROLE = 'admin';
+    const END_USER_ROLE = 'end-user';
 
     /**
      * The attributes that are mass assignable.
@@ -42,4 +47,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Get the parent userable model.
+     */
+    public function userable()
+    {
+        return $this->morphTo();
+    }
 }
